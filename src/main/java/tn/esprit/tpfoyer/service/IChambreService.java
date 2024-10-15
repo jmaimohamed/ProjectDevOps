@@ -18,4 +18,9 @@ public interface IChambreService {
 
     public List<Chambre> recupererChambresSelonTyp(TypeChambre tc);
 
+    public Chambre reserverChambreDisponible(TypeChambre typeChambre) ;
+
+
+    Chambre libererChambre(Long numeroChambre);
+
 }

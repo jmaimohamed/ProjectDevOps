@@ -21,12 +21,13 @@ public class Chambre {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long idChambre;
 
+    @Column(unique = true)
     long numeroChambre;
 
     @Enumerated(EnumType.STRING)
     TypeChambre typeC;
 
-
+    boolean disponible;
 
     @OneToMany
     Set<Reservation> reservations;
