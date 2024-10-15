@@ -29,6 +29,12 @@ public class Chambre {
 
     boolean disponible;
 
+    public Chambre(Long numeroChambre, TypeChambre typeC, boolean disponible) {
+        this.numeroChambre = numeroChambre;
+        this.typeC = typeC;
+        this.disponible = disponible;
+    }
+
     @OneToMany
     Set<Reservation> reservations;
 

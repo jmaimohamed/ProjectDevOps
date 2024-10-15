@@ -47,6 +47,9 @@ public class ChambreServiceImpl implements IChambreService {
 
 
 
+    public void removeAllChambres() {
+        chambreRepository.deleteAll();
+    }
 
 
 
