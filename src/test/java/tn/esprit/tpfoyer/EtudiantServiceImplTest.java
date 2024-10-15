@@ -1,10 +1,10 @@
 package tn.esprit.tpfoyer;
 
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.MethodOrderer.*;
-import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import tn.esprit.tpfoyer.entity.Etudiant;
@@ -21,6 +21,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @TestMethodOrder(OrderAnnotation.class)
 class EtudiantServiceImplTest {
 
+    @Autowired
+    private IEtudiantService etudiantService;
+
     private Etudiant etudiant;
 
     @BeforeEach
@@ -29,23 +32,42 @@ class EtudiantServiceImplTest {
     }
 
     @Test
-    void testEtudiantAttributes() {
-        assertEquals(1L, etudiant.getIdEtudiant());
-        assertEquals("John", etudiant.getNomEtudiant());
-        assertEquals("Doe", etudiant.getPrenomEtudiant());
-        assertEquals(12345678L, etudiant.getCinEtudiant());
-        assertNotNull(etudiant.getDateNaissance());
+    @Order(1)
+    void testAddEtudiant() {
+        Etudiant savedEtudiant = etudiantService.addEtudiant(etudiant);
+        assertNotNull(savedEtudiant);
+        assertEquals(etudiant.getCinEtudiant(), savedEtudiant.getCinEtudiant());
     }
 
     @Test
-    void testReservations() {
-        assertNotNull(etudiant.getReservations());
-        assertEquals(0, etudiant.getReservations().size());
-
-        etudiant.getReservations().add(null);  // Example to check adding to set
-        assertEquals(1, etudiant.getReservations().size());
+    @Order(2)
+    void testRetrieveAllEtudiants() {
+        List<Etudiant> etudiants = etudiantService.retrieveAllEtudiants();
+        assertNotNull(etudiants);
+        assertEquals(1, etudiants.size());
     }
 
+    @Test
+    @Order(3)
+    void testRetrieveEtudiant() {
+        Etudiant retrievedEtudiant = etudiantService.retrieveEtudiant(etudiant.getIdEtudiant());
+        assertNotNull(retrievedEtudiant);
+        assertEquals(etudiant.getCinEtudiant(), retrievedEtudiant.getCinEtudiant());
+    }
 
+    @Test
+    @Order(4)
+    void testModifyEtudiant() {
+        etudiant.setNomEtudiant("Modified Name");
+        Etudiant updatedEtudiant = etudiantService.modifyEtudiant(etudiant);
+        assertEquals("Modified Name", updatedEtudiant.getNomEtudiant());
+    }
+
+    @Test
+    @Order(5)
+    void testRemoveEtudiant() {
+        etudiantService.removeEtudiant(etudiant.getIdEtudiant());
+        Etudiant deletedEtudiant = etudiantService.retrieveEtudiant(etudiant.getIdEtudiant());
+        assertNull(deletedEtudiant); // Ensure it was deleted
+    }
 }
-
