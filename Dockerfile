@@ -1,9 +1,18 @@
-FROM openjdk:17-jdk-alpine
-EXPOSE 8089
+# Use a base image with Java 17
+FROM openjdk:17-jdk-slim
 
-RUN apk add --no-cache curl
+# Set environment variables for the application
+ENV SPRING_PROFILES_ACTIVE=prod
 
-RUN curl -o tp-foyer-5.0.0.jar http://192.168.207.129:8081/repository/maven-releases/tn/esprit/tp-foyer/5.0.0/tp-foyer-5.0.0.jar
+# Create a directory for the application
+WORKDIR /app
 
-ENTRYPOINT ["java", "-jar", "tp-foyer-5.0.0.jar"]
+# Copy the JAR file from the local machine to the Docker image
+COPY target/tp-foyer-5.0.0.jar /app/tp-foyer-5.0.0.jar
+
+# Expose the application port
+EXPOSE 8082
+
+# Define the entry point for the application
+ENTRYPOINT ["java", "-jar", "/app/tp-foyer-5.0.0.jar"]
 
